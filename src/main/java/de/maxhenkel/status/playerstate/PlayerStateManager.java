@@ -6,6 +6,7 @@ import de.maxhenkel.status.net.NetManager;
 import de.maxhenkel.status.net.PlayerStatePacket;
 import de.maxhenkel.status.net.PlayerStatesPacket;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.MinecraftServer;
@@ -29,6 +30,8 @@ public class PlayerStateManager {
             PlayerState state = packet.getPlayerState();
             state.setPlayer(player.getUUID());
             states.put(player.getUUID(), state);
+            server.getPlayerList().broadcastAll(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player));
+
             broadcastState(server, state);
         });
     }

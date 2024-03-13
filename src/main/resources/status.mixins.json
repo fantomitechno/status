@@ -5,12 +5,13 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "PlayerManagerMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
+    "ClientPacketListenerMixin",
     "MinecraftMixin",
-    "PlayerTabOverlayMixin",
-    "ClientPacketListenerMixin"
+    "PlayerTabOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1

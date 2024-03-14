@@ -39,21 +39,22 @@ public abstract class ServerPlayerMixin extends Player {
         if (!state.getState().isEmpty() || !state.getAvailability().equals(Availability.NONE)) {
             var profileName = Component.literal(this.getGameProfile().getName());
             var displayName = PlayerTeam.formatNameForTeam(this.getTeam(), profileName);
-            displayName = switch (state.getState()) {
+            Component status = Component.literal(" ");
+            status = switch (state.getState()) {
                 case "streaming" ->
-                        displayName.append(Component.literal(" ●").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withBold(true)));
+                        status.append(Component.literal("●").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withBold(true)));
                 case "recording" ->
-                        displayName.append(Component.literal(" ●").setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withBold(true)));
-                default -> displayName;
+                        status.append(Component.literal("●").setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withBold(true)));
+                default -> status;
             };
 
-            displayName = switch (state.getAvailability()) {
-                case OPEN -> displayName.append(Component.literal(" ■").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withBold(true)));
-                case DO_NOT_DISTURB -> displayName.append(Component.literal(" ■").setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withBold(true)));
-                default -> displayName;
+            status = switch (state.getAvailability()) {
+                case OPEN -> status.append(Component.literal("■").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withBold(true)));
+                case DO_NOT_DISTURB -> status.append(Component.literal("■").setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withBold(true)));
+                default -> status;
             };
 
-            cir.setReturnValue(displayName);
+            cir.setReturnValue(displayName.append(status));
         }
     }
 }

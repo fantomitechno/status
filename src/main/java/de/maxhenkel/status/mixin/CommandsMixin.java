@@ -21,12 +21,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.UUID;
 
+import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
+import static com.mojang.brigadier.arguments.BoolArgumentType.getBool;
+import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
 @Mixin(Commands.class)
 public abstract class CommandsMixin {
     @Shadow @Final private CommandDispatcher<CommandSourceStack> dispatcher;
-    
+
     @Inject(method = "<init>",
             at = @At(
                     value = "INVOKE",
@@ -74,6 +77,14 @@ public abstract class CommandsMixin {
                             context.getSource().sendSuccess(() -> Component.literal("Availability is now dnd"), true);
                             return 1;
                         }))
+                ).then(literal("noSleep")
+                        .then(argument("shouldBlockSleep", bool()).executes(context -> {
+                            if (!context.getSource().isPlayer()) return 0;
+                            boolean sleep = getBool(context, "shouldBlockSleep");
+                            setNoSleep(context.getSource().getPlayer(), sleep);
+                            context.getSource().sendSuccess(() -> Component.literal(sleep ? "Now blocking sleep" : "Now unblocking sleep"), true);
+                            return 1;
+                        }))
                 ));
     }
 
@@ -97,5 +108,13 @@ public abstract class CommandsMixin {
         player.server.getPlayerList().broadcastAll(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player));
 
         Status.STATE_MANAGER.broadcastState(player.server, state);
+    }
+
+    @Unique
+    void setNoSleep(ServerPlayer player, boolean bl) {
+        PlayerState state = Status.STATE_MANAGER.getState(player.getUUID());
+        if (state == null) state = new PlayerState(player.getUUID());
+        state.setNoSleep(bl);
+        Status.STATE_MANAGER.setState(player.getUUID(), state);
     }
 }

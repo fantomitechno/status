@@ -4,10 +4,11 @@
   "package": "de.maxhenkel.status.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "PlayerListMixin",
+    "CommandsMixin",
     "PlayerManagerMixin",
     "PlayerMixin",
-    "ServerPlayerMixin"
+    "ServerPlayerMixin",
+    "ServerScoreboardMixin"
   ],
   "client": [
     "ClientPacketListenerMixin",

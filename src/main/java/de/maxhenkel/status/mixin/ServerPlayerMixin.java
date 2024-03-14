@@ -25,7 +25,6 @@ import java.util.Objects;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player {
-    @Shadow @Final public MinecraftServer server;
 
     public ServerPlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(level, blockPos, f, gameProfile);
@@ -42,15 +41,15 @@ public abstract class ServerPlayerMixin extends Player {
             var displayName = PlayerTeam.formatNameForTeam(this.getTeam(), profileName);
             displayName = switch (state.getState()) {
                 case "streaming" ->
-                        displayName.append(Component.literal(" ●").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
+                        displayName.append(Component.literal(" ●").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withBold(true)));
                 case "recording" ->
-                        displayName.append(Component.literal(" ●").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_RED)));
+                        displayName.append(Component.literal(" ●").setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withBold(true)));
                 default -> displayName;
             };
 
             displayName = switch (state.getAvailability()) {
-                case OPEN -> displayName.append(Component.literal(" ■").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)));
-                case DO_NOT_DISTURB -> displayName.append(Component.literal(" ■").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_RED)));
+                case OPEN -> displayName.append(Component.literal(" ■").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withBold(true)));
+                case DO_NOT_DISTURB -> displayName.append(Component.literal(" ■").setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withBold(true)));
                 default -> displayName;
             };
 

@@ -65,7 +65,7 @@ public class PlayerStateManager {
         return players;
     }
 
-    private void broadcastState(MinecraftServer server, PlayerState state) {
+    public void broadcastState(MinecraftServer server, PlayerState state) {
         PlayerStatePacket packet = new PlayerStatePacket(state);
         server.getPlayerList().getPlayers().forEach(p -> NetManager.sendToClient(p, packet));
     }
@@ -88,6 +88,10 @@ public class PlayerStateManager {
 
     public Collection<PlayerState> getStates() {
         return states.values();
+    }
+
+    public void setState(UUID playerUUID, PlayerState state) {
+        states.put(playerUUID, state);
     }
 
 }
